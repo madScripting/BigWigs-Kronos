@@ -1,0 +1,147 @@
+20051(Final)	Naxx - Sapphiron: added many bars and warnings
+	Naxx - Kel'Thuzad: deleted the useless volley bar, fixed the kick warning, added clickable MC bars for all MCs, fixed Auto-MasterTarget
+20050	ZG - Gahz'ranka: changed bars colors
+	Naxx - DkCaptain: fixed the timers and prevented an error if the module would reset / not start on pull
+			fixed bars resetting when 1 captain dies
+	Naxx - SewageSlime: added 120sec, 60sec and 30sec messages since the bar disappears on disengages
+	Naxx - Razuvious: Mind Exhaustion seems to be 60sec instead of 45sec; fixed timer.
+	Naxx - Gothik: confirmed sideSwitch timer (gate open seems to be linked to hp @ timer end)
+	Deleted the Farclip Plugin as it was causing issue
+	set higher default values on the Range plugin for the combat log
+20049	Naxx - Thaddius: Fixed Magnetic Pull trigger
+	Naxx - Horsemen: Changed the VoidZone icon to something more appropriate
+			Fixed Meteor Trigger
+			Hiding VoidZone and HolyWrath timers and warnings unless
+			targetting those horsemen or someone targetting those horsemen
+	Naxx - Razuvious: added MC-Immune timers
+	Naxx - Gothik: added side-switching and gate opening timers (now need the actual
+				 time for those timers, set at 45 seconds for now.)
+	Naxx - DkCaptain: new module, now announces whirlwinds
+20048	Overhaul of all Naxxramas modules
+	Adjusted all timers, icons, colors
+	Added tons of timers, triggers, warnings
+	Created the SewageSlimes module
+20047	Onyxya: Adjusted Timers
+	AQ40 - Ouro: Removed the KTM self threat reset; now handled by KTM
+	AQ40 - Huhuran: Changed bar colors for clarity
+	AQ40 - Frankriss: Added wound and taunt warnings - module overhaul
+	AQ40 - Defenders: Added reflection warnings
+	AQ20 - Guardians: Added reflection warnings
+	Ignite: Probably fixed an rare error with the module; undefined igniteStack var, now predefined as default to 1
+	Versions: Changed location for latest BigWigs to Twitch page.
+20046	New timers for King Gordok in DM-N
+	New module: Ignite
+	Fixed possible supreme timers math
+	Changed Firemaw, Flamegor, Ebonroc, Chromagg, Geddon, Shazz, Rag, AQ40-Champion, AQ40-MindSlayer, Tranq bar colors
+	Added delays to Geddon timers, disabled overlaps, adjusted firstInferno timer
+	Revamped Onyxia	
+	AQ40 Champion, added detection for self-immune to fear
+20045	Tied DarkGlare timers to the first cast of GreenBeam, should be 100% accurate.
+	Tied RandomBeam timer to the first cast of GreenBeam, should be 100% accurate.
+	Tied DarkGlare refresh timers to the first GreenBeam after Glare, should be 100% accurate.
+	Ouro - Fixed an oversight with the Berserk detection.
+20044	Ossirian - fixed "possible supreme" timer (added the 5seconds for crystal "loading" time)
+	Gahz'ranka - fixed an error with frost breath bar (wrong localization)
+	Arlokk - fixed whirlwind sync (forgot to define)
+	AQ40 Champion - added triggers for fear resist and immune. Timers should pop on every cooldown now.
+	AQ40 Warder - changed bar colors and text.
+	C'Thun - tightened timers of Dark Glare, deleted a useless check for GNPP.
+	Ouro - Fixed SandBlast threat reset when the spin is resisted. Requires KTM 69.06 or above
+20043	Nefarian - added FearSoon bar. Changed bar colors.
+	Ouro - added sounds and bigIcons. Changed bar colors and icons.
+	Arlokk - added gouge bar
+	Jin'do - improved bars
+	Hakkar - improved bars and warnings
+	Mandokir - improved bars
+	Ghaz'ranka - improved bars
+	C'Thun - changed bar colors
+	Ayamiss - edited larva timer, fixed sacrifice end cancelbar.
+	Kurinnaxx - fixed enrage trigger
+	Ossirian - added timer for first crystal
+	Ebonroc - added masterTarget on engage, should fix threat
+	Razorgore - reenabled the castbar now that the counter and P2trigger works.
+	Jeklik - changed bar colors
+	Venoxis - fixed holyfire bar and warning to account for cast time
+20042	Kurinnaxx - Added a toggle for the sand trap bars
+	Overhaul of all ZG bosses.
+	Fixed an error on Chromaggus Time Lapse.
+	Expecting ZG to be 100% done.
+20041	Added A LOT of togglable options
+	Shortened the bigIcons timers by default (by popular demand)
+	Rewrote most modules to fit the proper format
+	Ossirian - Now has a "possible supreme" timer instead of no timers when hit by the same vulnerability
+	Kurinnaxx - fixed enrage warning error
+	Hakkar - now warns priests to dispell after MC.
+	Nefarian - fixed an error preventing P2 timers from happenning (woops!)
+	Expecting MC to be 100% done.
+	Expecting BWL to be 100% done except Razorgore.
+	Expecting AQ20 to be 100% done.	
+20036	-AQ40-
+	C'Thun - Edited timers, Added GNPP warning, Added run in, Changed timer colors, Added Window of Opprtunity
+	Ouro - master target and KTM reset
+	Viscidus - master target and KTM reset and enabled poison bolt timers
+	Sentinels - prevented reset of the module during combat
+	Defenders - fixed a missing icon
+	-AQ20-
+	Kurinnaxx - did whole module
+	Flesh Hunter - created module
+	Buru - master target, fixed icon, added dismember, added P2
+	Ayamiss - did whole module
+	Moam - Added mana bar
+	Guardians - added 1-2groups warning, revamped explode warning
+	-ZG-
+	TigerBoss - added Kill/Don't kill warnings
+20035	added many warningIcons and Sounds to many encounters
+	Enhanced Lucifron MC
+	Enhanced Ragnaros knockbacks
+	Enhanced Domo magic reflects
+	Enhanced Golemagg stacks and earthquake
+	Enhanced Shazz counterspell
+	Enhanced Garr banishes
+	Enhanced Geddon inferno and bomb. Fixed Inferno timers after 1st one.
+	Enhanced Magmadar fire on the ground
+	-
+	Enhanced Hakkar MC
+	-	
+	Enhanced Firemaw WingBuffet and FlameBuffet
+	Enhanced Nefarian MC and 20-23% section (complete overhaul of MC section)
+	Enhanced Chromaggus hide @ 10 seconds and Bronze warning
+	Enhanced Flamegor WingBuffet
+	Enhanced Ebonroc WingBuffet and Shadow of Ebonroc
+	Enhanced Broodlord blastwaveEnd warning and dontlootmoveAway
+	Enhanced Vaelstrasz warning for tanks
+	-
+	Enhanced Skeram MC
+	Enhanced Sentinels announcements and killorder
+	Enhanced Defenders, fixed infinite messages, added sounds on explosion and plague
+	Added Champion module for fears
+	Added Mindslayer module for MC and fear
+	
+	
+20034	Sartura edited Knockback! text and timer (from 10sec to 8sec Cooldown based)
+	Viscidus cleaned a lot unneeded announces. Added bars for DPS time. Added run in calls, poke call, group sides to go to, run out call.
+	TwinEmps edited Teleport to 26 seconds, cooldown based, starts a 10sec timer after 26seconds, clears both timers on teleport and announces 		teleport and restarts 26 seconds timer.
+	Shazzrah Fixed the Priest and Shaman icon error
+	Geddon Fixed bomb icon and getting icon off after bomb went off
+	Vael Fixed Burning Adrenaline icon
+	Anubisath Defenders Fixed Plague icon
+	New module: Anubisath Sentinel
+	Versions.lua changed github link on outdated version for Discord #addons
+20033	Fixed Razorgore so it doesn't reset mid fight.(will have to force reset with ctrl-click on wipe)
+	Went back to old version of CommonAuras, should fix random error on zeppelin crash
+
+20032	Fixed Gehennas for real, BethyServer tested
+	Fixed Baron Geddon inferno trigger, BethyServer tested. Need to confirm the trigger on Kronos.
+	Fixed Shazzrah CS, Curse, BethyServer tested. Need to confirm triggers on Kronos
+
+20031 	Fixed Gehennas	One "earliestCurse" was remaining, replaced with nextCurse.
+			Confirmed no occurence of "earliestCurse" or "latestCurse" remain.
+	Attempted to fix Baron Geddon	Only the first inferno timer happens. Changed ThrottleSync (line 196) to 15, as it was over the actual inferno timer.
+			Deleted deletion of bar (since CD bar should always be done) and edited inferno sync and timer to what i think it should be.
+			Fixed a typo in the bomb section, let's see how that goes...
+			Shortened LivingBomb CD as per data.
+			Adjusted nextIgnite CD as per data.
+
+20030 Release of Relar version.
+Adjusted all timers that seemed off.
+Disabled icon placement on C'thun's fight (line 556), ppl can now enable icon placement risk-free.
