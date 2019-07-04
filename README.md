@@ -17,7 +17,7 @@ Adjustments for Elysium made by <b>Hosq</b>.<br>
 Adjustments for Kronos made by <b>Vnm</b>.<br>
 Special thanks to <b>Masil</b> for Kronos adjustments.
 
-Latest and greatest changes made by <b>Relar</b>:<br>
+Latest and greatest changes made by <b>Relar aka Dreadsome</b>:<br>
 -100% compatible with the Kronos 3 server<br>
 -Overhaul of most already existing boss modules<br>
 -Creation of many new modules, for bosses and trash<br>
