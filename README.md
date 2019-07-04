@@ -18,8 +18,8 @@ Adjustments for Kronos made by <b>Vnm</b>.<br>
 Special thanks to <b>Masil</b> for Kronos adjustments.
 
 Latest and greatest changes made by <b>Relar</b>:
--100% compatible with the Kronos 3 server
--Overhaul of most already existing boss modules
--Creation of many new modules, for bosses and trash
-This boss mod addon is now the most advanced boss mod ever created for any 1.12.1 server.
-The use of Relar KTM is highly recommended for the best experience.
+-100% compatible with the Kronos 3 server<br>
+-Overhaul of most already existing boss modules<br>
+-Creation of many new modules, for bosses and trash<br>
+This boss mod addon is now the most advanced boss mod ever created for any 1.12.1 server.<br>
+The use of Relar KTM is highly recommended for the best experience.<br>
