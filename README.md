@@ -17,4 +17,9 @@ Adjustments for Elysium made by <b>Hosq</b>.<br>
 Adjustments for Kronos made by <b>Vnm</b>.<br>
 Special thanks to <b>Masil</b> for Kronos adjustments.
 
-Latest adjustments for Kronos 3 made by <b>Relar</b>.<br>
+Latest and greatest changes made by <b>Relar</b>:
+-100% compatible with the Kronos 3 server
+-Overhaul of most already existing boss modules
+-Creation of many new modules, for bosses and trash
+This boss mod addon is now the most advanced boss mod ever created for any 1.12.1 server.
+The use of Relar KTM is highly recommended for the best experience.
