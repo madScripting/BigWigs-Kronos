@@ -1,4 +1,9 @@
-20051(Final)	Naxx - Sapphiron: added many bars and warnings
+20052(K4)	MC - Ragnaros: fixed sons death count
+		MC - Gheddon: adjusted Inferno timer for 2nd and up casts (-7seconds)
+		MC - Shazzrah: adjusted Deaden timer (static 8seconds)
+		MC - Domo: added melee dmg shield warning icon
+				attempt to adjust the adds death count (seems they don't show in combat log that they die half the time...)
+20051(K3 Final)	Naxx - Sapphiron: added many bars and warnings
 	Naxx - Kel'Thuzad: deleted the useless volley bar, fixed the kick warning, added clickable MC bars for all MCs, fixed Auto-MasterTarget
 20050	ZG - Gahz'ranka: changed bars colors
 	Naxx - DkCaptain: fixed the timers and prevented an error if the module would reset / not start on pull

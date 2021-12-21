@@ -1,7 +1,7 @@
 
 local module, L = BigWigs:ModuleDeclaration("Ragnaros", "Molten Core")
 
-module.revision = 20046
+module.revision = 20052
 module.enabletrigger = module.translatedName
 module.toggleoptions = {"bigicon", "sounds", "lava", "start", "aoeknock", "submerge", "emerge", "adds", "bosskill"}
 
@@ -21,7 +21,7 @@ L:RegisterTranslations("enUS", function() return {
 	emerge_desc = "Warn for Ragnaros Emerge",
 
 	adds_cmd = "adds",
-	adds_name = "Son of Flame dies",
+	adds_name = "Son of Flame",
 	adds_desc = "Warn when a son dies",
 
 	submerge_cmd = "submerge",
@@ -71,7 +71,7 @@ L:RegisterTranslations("enUS", function() return {
 	submerge_message = "Ragnaros submerged. Incoming Sons of Flame!",
 	submerge_bar = "Ragnaros submerge",
 
-	sonofflame = "Son of Flame",
+	sonDies = "Son of Flame dies.",
 	sonsdeadwarn = "%d/8 Sons of Flame dead!",
 
 	lava_trigger = "health for swimming in lava",
@@ -102,7 +102,7 @@ local icon = {
 
 local syncName = {
 	knockback = "RagnarosKnockback"..module.revision,
-	sons = "RagnarosSonDead"..module.revision,
+	sonDiesSync = "RagnarosSonDies"..module.revision,
 	submerge = "RagnarosSubmerge"..module.revision,
 	emerge = "RagnarosEmerge"..module.revision,
 }
@@ -111,11 +111,12 @@ local firstKnockback = true
 local lastKnockback = nil
 local sonsdead = 0
 local phase = nil
-module.wipemobs = { L["sonofflame"] }
+module.wipemobs = { L["sonDies"] }
 
 function module:OnEnable()
 	self:RegisterEvent("CHAT_MSG_MONSTER_YELL", "Event")
 	self:RegisterEvent("CHAT_MSG_COMBAT_SELF_HITS", "Event")
+	self:RegisterEvent("CHAT_MSG_COMBAT_HOSTILE_DEATH", "Event")
 
 	self:ThrottleSync(5, syncName.knockback)
 end
@@ -132,9 +133,11 @@ end
 function module:OnEngage()
 	self:ScheduleRepeatingEvent("bwragnarosemergecheck", self.EmergeCheck, 1, self)
 	self:EmergeCheck()
+	sonsdead = 0
 end
 
 function module:OnDisengage()
+
 end
 
 function module:Event(msg)
@@ -142,8 +145,8 @@ function module:Event(msg)
 		self:WarningSign(icon.lava, timer.lava)
 	end
 	BigWigs:CheckForBossDeath(msg, self)
-	if string.find(msg, L["sonofflame"]) then
-		self:Sync(syncName.sons .. " " .. tostring(sonsdead + 1))
+	if string.find(msg, L["sonDies"]) then
+		self:Sync(syncName.sonDiesSync .. " " .. tostring(sonsdead + 1))
 	end
 	if string.find(msg, L["knockback_trigger"]) and self.db.profile.aoeknock then
 		self:Sync(syncName.knockback)
@@ -166,7 +169,7 @@ function module:Event(msg)
 end
 
 function module:BigWigs_RecvSync(sync, rest, nick)
-	if sync == syncName.sons and rest and rest ~= "" then
+	if sync == syncName.sonDiesSync and rest and rest ~= "" then
 		rest = tonumber(rest)
 		if rest <= 8 and sonsdead < rest then
 			sonsdead = rest
@@ -207,7 +210,6 @@ end
 function module:Emerge()
 	phase = "emerged"
 	firstKnockback = true
-	sonsdead = 0
 	self:CancelDelayedSync(syncName.emerge)
 	self:CancelScheduledEvent("bwragnarosemergecheck")
 	self:CancelDelayedMessage(L["emerge_soon_message"])

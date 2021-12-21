@@ -1,6 +1,6 @@
 # BigWigs
 BigWigs is a World of Warcraft AddOn to predict certain AI behaviour to improve the players performance.<br>
-This Modification is built for Patch 1.12.1 and its content for use on the <b>Kronos 3</b> private Server.
+This Modification is built for Patch 1.12.1 and its content for use on the <b>Kronos 4</b> private Server.
 
 ## How to install
 Either clone the repository to your WoW/Interface/Addons folder, or download manually via github (click on Clone or Download -> Download ZIP. Do not forget to rename the directory to "BigWigs" afterwards.
@@ -17,9 +17,4 @@ Adjustments for Elysium made by <b>Hosq</b>.<br>
 Adjustments for Kronos made by <b>Vnm</b>.<br>
 Special thanks to <b>Masil</b> for Kronos adjustments.
 
-Latest and greatest changes made by <b>Relar aka Dreadsome</b>:<br>
--100% compatible with the Kronos 3 server<br>
--Overhaul of most already existing boss modules<br>
--Creation of many new modules, for bosses and trash<br>
-This boss mod addon is now the most advanced boss mod ever created for any 1.12.1 server.<br>
-The use of Relar KTM is highly recommended for the best experience.<br>
+Latest adjustments for Kronos 3 and 4 made by <b>Relar</b>.<br>

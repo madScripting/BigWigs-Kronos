@@ -1,7 +1,7 @@
 
 local module, L = BigWigs:ModuleDeclaration("Shazzrah", "Molten Core")
 
-module.revision = 20046
+module.revision = 20052
 module.enabletrigger = module.translatedName
 module.toggleoptions = {"bigicon", "sounds", "curse", "deaden", "blink", "counterspell", "bosskill"}
 
@@ -60,7 +60,7 @@ local timer = {
 	firstCurse = 27,
 	blink = 25,
 	firstBlink = 25,
-	deaden = 16,
+	deaden = 8,
 	firstDeaden = 8,
 }
 

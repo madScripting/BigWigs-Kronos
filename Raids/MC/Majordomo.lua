@@ -1,6 +1,6 @@
 local module, L = BigWigs:ModuleDeclaration("Majordomo Executus", "Molten Core")
 
-module.revision = 20041
+module.revision = 20052
 module.enabletrigger = module.translatedName
 module.toggleoptions = {"bigicon", "sounds", "magic", "dmg", "adds", "bosskill"}
 
@@ -28,8 +28,8 @@ L:RegisterTranslations("enUS", function() return {
 	bigicon_desc = "Shows a big icon when magic shield is up",
 	
 	sounds_cmd = "sounds",
-	sounds_name = "Magic Shield sound alert",
-	sounds_desc = "Sound effect when magic shield is up",
+	sounds_name = "Magic and Damage Shield sound alert",
+	sounds_desc = "Sound effect when magic and damage shields are up",
 
 	disabletrigger = "Impossible! Stay your attack",
 	engage_trigger = "Reckless mortals, none may challenge the sons of the living flame!",
@@ -37,7 +37,9 @@ L:RegisterTranslations("enUS", function() return {
 	elitename = "Flamewaker Elite",
 	healername = "Flamewaker Healer",
 	healdead = "Flamewaker Healer dies",
+	healdead2 = "You have slain Flamewaker Healer!",
 	elitedead = "Flamewaker Elite dies",
+	elitedead2 = "You have slain Flamewake Elite!",
 	hdeadmsg = "%d/4 Flamewaker Healers dead!",
 	edeadmsg = "%d/4 Flamewaker Elites dead!",
 
@@ -114,9 +116,9 @@ function module:Event(msg)
 	elseif string.find(msg, L["dmg_trigger"]) then
 		self:Sync(syncName.dmg)
 	end
-	if string.find(msg, L["healdead"]) then
+	if string.find(msg, L["healdead"]) or string.find(msg, L["healdead2"]) then
 		self:Sync(syncName.healerDead .. " " .. tostring(self.hdead + 1))
-	elseif string.find(msg, L["elitedead"]) then
+	elseif string.find(msg, L["elitedead"]) or string.find(msg, L["elitedead2"]) then
 		self:Sync(syncName.eliteDead .. " " .. tostring(self.edead + 1))
 	end
 end
@@ -170,6 +172,15 @@ function module:DamageShield()
 	if self.db.profile.dmg then
 		self:RemoveBar(L["shield_bar"])
 		self:Message(L["dmg_warn"], "Attention")
+		if playerClass == "WARRIOR" or playerClass == "ROGUE" then
+			if self.db.profile.bigicon then
+				self:WarningSign(icon.dmg, timer.shieldDuration)
+			end
+			if self.db.profile.sound then
+				self:Sound("meleeout")
+				self:DelayedSound(timer.shieldDuration - 1, "gogogo")
+			end
+		end
 		self:Bar(L["dmg_bar"], timer.shieldDuration, icon.dmg)
 	end
 	if self.db.profile.magic or self.db.profile.dmg then
