@@ -43,7 +43,7 @@ L:RegisterTranslations("enUS", function() return {
 	["Nr Replies"] = true,
 	["Ancient"] = true,
 
-	["A new BigWigs is available!\nPlease visit https://www.twitch.tv/magnifiquetwitch to get the latest version."] = true,
+	["A new BigWigs is available!\nPlease visit https://github.com/madScripting to get the latest version."] = true,
 	["Close"] = true,
 	["Cancel"] = true,
 
@@ -51,7 +51,7 @@ L:RegisterTranslations("enUS", function() return {
 	["Notify old versions"] = true,
 	["Notify old versions"] = true,
 	["List people with old versions to raid chat."] = true,
-	["Download newest version from https://www.twitch.tv/magnifiquetwitch"] = true,
+	["Download newest version from https://github.com/madScripting"] = true,
 
 	["Show popup"] = true,
 	["Show popup warning on out of date version"] = true,
@@ -85,7 +85,7 @@ L:RegisterTranslations("deDE", function() return {
 	["Nr Replies"] = "Anzahl der Antworten",
 	["Ancient"] = "Alt",
 
-	["A new BigWigs is available!\nPlease visit https://www.twitch.tv/magnifiquetwitch to get the latest version."] = "Deine Version von Big Wigs Kronos ist veraltet! Bitte downloade die neuste Version von https://www.twitch.tv/magnifiquetwitch",
+	["A new BigWigs is available!\nPlease visit https://github.com/madScripting to get the latest version."] = "Deine Version von Big Wigs Kronos ist veraltet! Bitte downloade die neuste Version von https://github.com/madScripting",
 	["Close"] = "Schliessen",
 	["Cancel"] = "Abbrechen",
 } end )
@@ -252,12 +252,12 @@ end
 function BigWigsVersionQuery:IsOutOfDate()
 	if not self.OutOfDateShown then
 		self.OutOfDateShown = true
-		BigWigs:Print(L["A new BigWigs is available!\nPlease visit https://www.twitch.tv/magnifiquetwitch to get the latest version."])
+		BigWigs:Print(L["A new BigWigs is available!\nPlease visit https://github.com/madScripting to get the latest version."])
 
 		if self.db.profile.popup then
 			local dialog = nil
 			StaticPopupDialogs["BigWigsOutOfDateDialog"] = {
-				text = L["A new BigWigs is available!\nPlease visit https://www.twitch.tv/magnifiquetwitch to get the latest version."],
+				text = L["A new BigWigs is available!\nPlease visit https://github.com/madScripting to get the latest version."],
 				button1 = L["Close"],
 				button2 = L["Cancel"],
 				OnAccept = function()
@@ -268,7 +268,7 @@ function BigWigsVersionQuery:IsOutOfDate()
 				end,
 				OnShow = function (self, data)
 					local editbox = getglobal(this:GetName().."WideEditBox")
-					editbox:SetText("https://www.twitch.tv/magnifiquetwitch")
+					editbox:SetText("https://github.com/madScripting")
 					editbox:SetWidth(250)
 					editbox:ClearFocus()
 					editbox:HighlightText()
@@ -302,7 +302,7 @@ function BigWigsVersionQuery:NotifyOldVersions()
 	end
 	SendChatMessage(L["People with outdated BigWigs:"],"RAID")
 	SendChatMessage(line,"RAID")
-	SendChatMessage(L["Download newest version from https://www.twitch.tv/magnifiquetwitch"], "RAID")
+	SendChatMessage(L["Download newest version from https://github.com/madScripting"], "RAID")
 end
 
 function BigWigsVersionQuery:OnTooltipUpdate()

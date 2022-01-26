@@ -1,7 +1,7 @@
 
 local module, L = BigWigs:ModuleDeclaration("Gehennas", "Molten Core")
 
-module.revision = 20041
+module.revision = 20057
 module.enabletrigger = module.translatedName
 module.toggleoptions = {"adds", "curse", "rain", "bosskill"}
 
@@ -84,6 +84,9 @@ function module:OnEngage()
 	if self.db.profile.curse then
 		self:DelayedMessage(timer.firstCurse - 5, L["curse_warn_soon"], "Urgent", nil, nil, true)
 		self:Bar(L["curse_bar"], timer.firstCurse, icon.curse)
+	end
+	if UnitName("target") == "Gehennas" and (IsRaidLeader() or IsRaidOfficer()) then
+		klhtm.net.sendmessage("target " .. "Gehennas")
 	end
 end
 

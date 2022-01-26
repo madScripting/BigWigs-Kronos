@@ -1,7 +1,7 @@
 
 local module, L = BigWigs:ModuleDeclaration("Ragnaros", "Molten Core")
 
-module.revision = 20052
+module.revision = 20057
 module.enabletrigger = module.translatedName
 module.toggleoptions = {"bigicon", "sounds", "lava", "start", "aoeknock", "submerge", "emerge", "adds", "bosskill"}
 
@@ -111,7 +111,7 @@ local firstKnockback = true
 local lastKnockback = nil
 local sonsdead = 0
 local phase = nil
-module.wipemobs = { L["sonDies"] }
+module.wipemobs = { L["adds_name"] }
 
 function module:OnEnable()
 	self:RegisterEvent("CHAT_MSG_MONSTER_YELL", "Event")
@@ -134,6 +134,9 @@ function module:OnEngage()
 	self:ScheduleRepeatingEvent("bwragnarosemergecheck", self.EmergeCheck, 1, self)
 	self:EmergeCheck()
 	sonsdead = 0
+	if UnitName("target") == "Ragnaros" and (IsRaidLeader() or IsRaidOfficer()) then
+		klhtm.net.sendmessage("target " .. "Ragnaros")
+	end
 end
 
 function module:OnDisengage()

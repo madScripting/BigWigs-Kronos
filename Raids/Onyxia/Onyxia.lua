@@ -1,9 +1,9 @@
 
 local module, L = BigWigs:ModuleDeclaration("Onyxia", "Onyxia's Lair")
 
-module.revision = 20046
+module.revision = 20057
 module.enabletrigger = module.translatedName
-module.toggleoptions = {"flamebreath", "deepbreath", "wingbuffet", "fireball", "phase", "onyfear", "bosskill"}
+module.toggleoptions = {"icon", "flamebreath", "deepbreath", "knockAway", "phase", "onyfear", "bosskill"}
 
 L:RegisterTranslations("enUS", function() return {
 	cmd = "Onyxia",
@@ -16,15 +16,15 @@ L:RegisterTranslations("enUS", function() return {
 	flamebreath_cmd = "flamebreath",
 	flamebreath_name = "Flame Breath",
 	flamebreath_desc = "Warn when Onyxia begins to cast Flame Breath.",
-
-	wingbuffet_cmd = "wingbuffet",
-	wingbuffet_name = "Wing Buffet",
-	wingbuffet_desc = "Warn for Wing Buffet.",
-
-	fireball_cmd = "fireball",
-	fireball_name = "Fireball",
-	fireball_desc = "Warn for Fireball.",
-
+	
+	knockAway_cmd = "knockAway",
+	knockAway_name = "Knock Away",
+	knockAway_desc = "Warn for Knock Away.",
+	
+	icon_cmd = "icon",
+	icon_name = "Raid Icon on Onyxia's target",
+	icon_desc = "Place a raid icon on Onyxia's targetted player.\n\n(Requires assistant or higher)",
+	
 	phase_cmd = "phase",
 	phase_name = "Phase",
 	phase_desc = "Warn for Phase Change.",
@@ -33,7 +33,8 @@ L:RegisterTranslations("enUS", function() return {
 	onyfear_name = "Fear",
 	onyfear_desc = "Warn for Bellowing Roar in phase 3.",
 
-	deepBreath_trigger = "takes in a deep breath",
+	deepBreath_trigger = "Onyxia takes in a deep breath...",
+	deepBreath_trigger2 = "Onyxia begins to cast Breath",
 	deepBreath_warn = "Deep Breath incoming!",
 	deepBreath_bar = "Deep Breath",
 	
@@ -42,13 +43,10 @@ L:RegisterTranslations("enUS", function() return {
 	flameBreathCD_bar = "Flame Breath CD",
 	flameBreathSoon_bar = "Flame Breath Soon...",
 	
-	wingBuffet_trigger = "Onyxia begins to cast Wing Buffet\.",
-	wingBuffetCast_bar = "Wing Buffet",
-	wingBuffetCD_bar = "Wing Buffet CD",
-	wingBuffetSoon_bar = "Wing Buffet Soon...",
-	
-	fireball_trigger = "Onyxia begins to cast Fireball.",
-	fireballCast_bar = "Fireball on %s",
+	knockAwayLand_trigger = "Knock Away hits",
+	knockAwayLand_warn = "Tank -33% threat",
+	knockAway_trigger = "Knock Away",
+	knockAway_bar = "Knock Away",
 	
 	phase2_trigger = "from above",
 	phase2_warn = "Phase 2",
@@ -71,15 +69,13 @@ local timer = {
 	fearSoon = 23, --saw 13 16
 	fearCast = 1.5,
 	
-	firstBuffet = 12, --saw 12
-	p1buffetCD = 25, --saw 30 25
-	p1buffetSoon = 10, --saw 18 28
-	p3firstBuffet = 7, --saw 7
-	p3buffetCD = 15, --saw 18 28 17 15.5
-	p3buffetSoon = 10, --saw 18 28
-	wingBuffetCast = 1,
+	knockAwayTimer = 13,
+	--first knock, saw 26 2x, putting 13 anyways
+	--p1 after 1st knock, saw 13 many times
+	--p3 she does it as she lands then every 13sec
+	--p3 after 1st knock, saw 13
 
-	firstBreath = 11.6, --saw 16 11.6
+	firstBreath = 10.2, --saw 16 11.6 10.2
 	p1BreathCD = 8, --saw 13 17 9
 	p1breathSoon = 10, --saw 9 10
 	p3firstBreath = 3.5, --saw 21 3.5
@@ -89,12 +85,12 @@ local timer = {
 }
 
 local icon = {
-	wingbuffet = "INV_Misc_MonsterScales_14",
+	knockAway = "INV_Misc_MonsterScales_14",
 	fear = "Spell_Shadow_Possession",
 	deepbreath = "Spell_Fire_SelfDestruct",
 	deepbreath_sign = "Spell_Fire_Lavaspawn",
-	fireball = "Spell_Fire_FlameBolt",
 	flamebreath = "spell_fire_fire",
+	onyTarget = "spell_shadow_charm",
 }
 
 local syncName = {
@@ -102,16 +98,14 @@ local syncName = {
 	phase2 = "OnyPhaseTwo"..module.revision,
 	phase3 = "OnyPhaseThree"..module.revision,
 	flamebreath = "OnyFlameBreath"..module.revision,
-	fireball = "OnyFireball"..module.revision,
 	fear = "OnyBellowingRoar"..module.revision,
 	firstfear = "OnyFirstFear"..module.revision,
-	wingbuffet = "OnyWingBuffet"..module.revision,
+	refreshKnockAway = "OnyRefreshKnockAway"..module.revision,
+	knockAwayWarn = "OnyKnockAwayWarn"..module.revision,
 }
 
 local transitioned = false
 local phase = 0
-local fireballTarget = nil
-local iconNumber = 8
 local firstfear = false
 
 module:RegisterYellEngage(L["engage_trigger"])
@@ -120,49 +114,88 @@ function module:OnEnable()
 	self:RegisterEvent("CHAT_MSG_MONSTER_YELL")
 	self:RegisterEvent("CHAT_MSG_RAID_BOSS_EMOTE")
 	
+	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_SELF_DAMAGE", "Event")
+	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_PARTY_DAMAGE", "Event")
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE", "Event")
+	
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE", "Event")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_PARTY_DAMAGE", "Event")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_DAMAGE", "Event")
+	
+	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_HOSTILEPLAYER_DAMAGE", "Event")
+	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_CREATURE_DAMAGE", "Event")
+	
+	self:RegisterEvent("CHAT_MSG_COMBAT_CREATURE_VS_CREATURE_MISSES", "Event")
+	self:RegisterEvent("CHAT_MSG_COMBAT_CREATURE_VS_PARTY_MISSES", "Event")
+	self:RegisterEvent("CHAT_MSG_COMBAT_CREATURE_VS_SELF_MISSES", "Event")
 	
 	self:ThrottleSync(10, syncName.deepbreath)
 	self:ThrottleSync(10, syncName.phase2)
 	self:ThrottleSync(10, syncName.phase3)
 	self:ThrottleSync(5, syncName.flamebreath)
-	self:ThrottleSync(2, syncName.fireball)
 	self:ThrottleSync(5, syncName.fear)
-	self:ThrottleSync(5, syncName.wingbuffet)
+	self:ThrottleSync(5, syncName.refreshKnockAway)
+	self:ThrottleSync(5, syncName.knockAwayWarn)
 	self:ThrottleSync(5, syncName.firstfear)
 end
 
 function module:OnSetup()
 	self.started = false
 	transitioned = false
-	fireballTarget = nil
 	firstfear = false
-	iconNumber = 8
 	phase = 0
 end
 
 function module:OnEngage()
+	onyCurrentTarget = nil
 	phase = 1
-	if self.db.profile.wingbuffet then
-		self:Bar(L["wingBuffetCD_bar"], timer.firstBuffet, icon.wingbuffet, true, "white")
-		self:DelayedBar(timer.firstBuffet, L["wingBuffetSoon_bar"],timer.p1buffetSoon, icon.wingbuffet, true, "white")
+	if self.db.profile.icon then
+		self:ScheduleRepeatingEvent("onyTargetCheck", self.onyTarget, 0.5, self)
+	end
+	if self.db.profile.knockAway then
+		self:Bar(L["knockAway_bar"], timer.knockAwayTimer, icon.knockAway, true, "white")
+		self:ScheduleRepeatingEvent("knockTimerStart", self.startKnockAwayTimer, 13, self)
 	end
 	if self.db.profile.flamebreath then
 		self:Bar(L["flameBreathCD_bar"], timer.firstBreath, icon.flamebreath, true, "red")
 		self:DelayedBar(timer.firstBreath, L["flameBreathSoon_bar"],timer.p1breathSoon, icon.flamebreath, true, "red")
 	end
+	if UnitName("target") == "Onyxia" and (IsRaidLeader() or IsRaidOfficer()) then
+		klhtm.net.sendmessage("target " .. "Onyxia")
+	end
 end
 
 function module:OnDisengage()
+	self:CancelScheduledEvent("onyTargetCheck")
+	self:CancelScheduledEvent("knockTimerStart")
+	self:CancelScheduledEvent("knockTimerDelayedStart")
+end
+
+function module:onyTarget()
+	if UnitName("target") == "Onyxia" and UnitName("targettarget") ~= nil then
+		if GetRaidTargetIndex("targettarget") ~= 8 and self.db.profile.icon then
+			SetRaidTarget("targettarget",8)
+		end
+		if UnitName("targettarget") ~= onyCurrentTarget then
+			onyCurrentTarget = UnitName("targettarget")
+			if onyCurrentTarget == UnitName("player") then
+				self:SendSay("Onyxia targetting " .. UnitName("player") .. "!")
+				self:WarningSign(icon.onyTarget, 0.5)
+				self:Sound("Long")
+			end
+		end
+	end
 end
 
 function module:CHAT_MSG_RAID_BOSS_EMOTE(msg)
+	if msg == L["deepBreath_trigger"] then
+		self:Sync(syncName.deepbreath)
+	end
+--[[
 	if string.find(msg, L["deepBreath_trigger"]) then
 		self:Sync(syncName.deepbreath)
 	end
+]]--
 end
 
 function module:CHAT_MSG_MONSTER_YELL(msg)
@@ -174,6 +207,9 @@ function module:CHAT_MSG_MONSTER_YELL(msg)
 end
 
 function module:Event(msg)
+	if string.find(msg, L["deepBreath_trigger2"]) then
+		self:Sync(syncName.deepbreath)
+	end
 	if string.find(msg, L["firstfear_trigger"]) then
 		self:Sync(syncName.firstfear)
 	end
@@ -183,11 +219,11 @@ function module:Event(msg)
 	if string.find(msg, L["flameBreath_trigger"]) then
 		self:Sync(syncName.flamebreath)
 	end
-	if string.find(msg, L["wingBuffet_trigger"]) then
-		self:Sync(syncName.wingbuffet)
+	if string.find(msg, L["knockAway_trigger"]) then
+		self:Sync(syncName.refreshKnockAway)
 	end
-	if string.find(msg, L["fireball_trigger"]) then
-		self:Sync(syncName.fireball)
+	if string.find(msg, L["knockAwayLand_trigger"]) then
+		self:Sync(syncName.knockAwayWarn)
 	end
 end
 
@@ -200,34 +236,35 @@ function module:BigWigs_RecvSync(sync, rest, nick)
 		self:DeepBreath()
 	elseif sync == syncName.flamebreath and self.db.profile.flamebreath then
 		self:FlameBreath()
-	elseif sync == syncName.fireball  then
-		self:Fireball()
 	elseif sync == syncName.fear and self.db.profile.onyfear then
 		self:Fear()
 	elseif sync == syncName.firstfear and not firstfear then
 		firstfear = true
 		self:FirstFear()
-	elseif sync == syncName.wingbuffet and self.db.profile.wingbuffet then
-		self:WingBuffet()
+	elseif sync == syncName.refreshKnockAway and self.db.profile.knockAway then
+		self:startKnockAwayTimer()
+	elseif sync == syncName.knockAwayWarn and self.db.profile.knockAway then
+		self:startKnockAwayTimer()
+		self:knockAwayWarn()
 	end
 end
 
-function module:WingBuffet()
-	self:RemoveBar(L["wingBuffetCD_bar"])
-	self:RemoveBar(L["wingBuffetSoon_bar"])
-	self:CancelDelayedBar(L["wingBuffetCD_bar"])
-	self:CancelDelayedBar(L["wingBuffetSoon_bar"])
-	
-	self:Bar(L["wingBuffetCast_bar"], timer.wingBuffetCast, icon.wingbuffet, true, "white")
-	
-	if phase == 1 then
-		self:DelayedBar(timer.wingBuffetCast, L["wingBuffetCD_bar"], timer.p1buffetCD, icon.wingbuffet, true, "white")
-		self:DelayedBar(timer.wingBuffetCast + timer.p1buffetCD, L["wingBuffetSoon_bar"],timer.p1buffetSoon, icon.wingbuffet, true, "white")
+function module:p3knockDelay()
+	self:CancelScheduledEvent("knockTimerDelayedStart")
+	self:ScheduleRepeatingEvent("knockTimerStart", self.startKnockAwayTimer, 13, self)
+end
+
+function module:startKnockAwayTimer()
+	if phase ~= 2 then 
+		self:RemoveBar(L["knockAway_bar"])
+		self:Bar(L["knockAway_bar"], timer.knockAwayTimer, icon.knockAway, true, "white")
+		self:CancelScheduledEvent("knockTimerStart")
+		self:ScheduleRepeatingEvent("knockTimerStart", self.startKnockAwayTimer, 13, self)
 	end
-	if phase == 3 then
-		self:DelayedBar(timer.wingBuffetCast, L["wingBuffetCD_bar"], timer.p3buffetCD, icon.wingbuffet, true, "white")
-		self:DelayedBar(timer.wingBuffetCast + timer.p3buffetCD, L["wingBuffetSoon_bar"],timer.p3buffetSoon, icon.wingbuffet, true, "white")
-	end
+end
+
+function module:knockAwayWarn()
+	self:Message(L["knockAwayLand_warn"], "Important", false, "Info")
 end
 
 function module:FlameBreath()
@@ -260,9 +297,10 @@ function module:Fear()
 end
 
 function module:FirstFear()
-	if self.db.profile.wingbuffet then
-		self:Bar(L["wingBuffetCD_bar"], timer.p3firstBuffet, icon.wingbuffet, true, "white")
-		self:DelayedBar(timer.p3firstBuffet, L["wingBuffetSoon_bar"],timer.p3buffetSoon, icon.wingbuffet, true, "white")
+	if self.db.profile.knockAway then
+		self:RemoveBar(L["knockAway_bar"])
+		self:Bar(L["knockAway_bar"], timer.knockAwayTimer, icon.knockAway, true, "white")
+		self:ScheduleRepeatingEvent("knockTimerDelayedStart", self.p3knockDelay, 13, self)
 	end
 	if self.db.profile.flamebreath then
 		self:Bar(L["flameBreathCD_bar"], timer.p3firstBreath, icon.flamebreath, true, "red")
@@ -270,9 +308,13 @@ function module:FirstFear()
 	end
 	if self.db.profile.onyfear then
 		self:RemoveBar(L["fearSoon_bar"])
-		self:Bar(L["fearCD_bar"], 30, icon.fear, true, "blue") --timer.firstfearCD
+		self:Bar(L["fearCD_bar"], 30, icon.fear, true, "blue")
 		self:WarningSign(icon.fear, 0.7)
-		self:DelayedBar(30, L["fearSoon_bar"], 23, icon.fear, true, "blue") --timer.firstfearCD --timer.fearSoon
+		self:DelayedBar(30, L["fearSoon_bar"], 23, icon.fear, true, "blue")
+	end
+	if self.db.profile.icon then
+		self:CancelScheduledEvent("onyTargetCheck")
+		self:ScheduleRepeatingEvent("onyTargetCheck", self.onyTarget, 0.5, self)
 	end
 end
 
@@ -283,14 +325,22 @@ function module:Phase2()
 		if self.db.profile.phase then
 			self:Message(L["phase2_warn"], "Important", false, "Alarm")
 		end
-		self:RemoveBar(L["wingBuffetCD_bar"])
-		self:RemoveBar(L["wingBuffetSoon_bar"])
-		self:CancelDelayedBar(L["wingBuffetCD_bar"])
-		self:CancelDelayedBar(L["wingBuffetSoon_bar"])
-		self:RemoveBar(L["flameBreathCD_bar"])
-		self:RemoveBar(L["flameBreathSoon_bar"])
-		self:CancelDelayedBar(L["flameBreathCD_bar"])
-		self:CancelDelayedBar(L["flameBreathSoon_bar"])
+		if self.db.profile.knockAway then
+			self:RemoveBar(L["knockAway_bar"])
+			self:CancelScheduledEvent("knockTimerStart")
+			self:CancelScheduledEvent("onyTargetCheck")
+			self:Bar(L["knockAway_bar"], 0.5, icon.knockAway, true, "white")
+			self:DelayedBar(0.5, L["knockAway_bar"], timer.knockAwayTimer, icon.knockAway, true, "white")
+		end
+		if self.db.profile.icon then
+			self:CancelScheduledEvent("onyTargetCheck")
+		end
+		if self.db.profile.flamebreath then
+			self:RemoveBar(L["flameBreathCD_bar"])
+			self:RemoveBar(L["flameBreathSoon_bar"])
+			self:CancelDelayedBar(L["flameBreathCD_bar"])
+			self:CancelDelayedBar(L["flameBreathSoon_bar"])
+		end
 	end
 end
 
@@ -301,6 +351,14 @@ function module:Phase3()
 		self:KTM_Reset()
 		self:Bar(L["fearSoon_bar"], 10, icon.fear, true, "blue")
 	end
+	if self.db.profile.knockAway then
+		self:RemoveBar(L["knockAway_bar"])
+		self:CancelScheduledEvent("knockTimerStart")
+		self:Bar(L["knockAway_bar"], 10, icon.knockAway, true, "white")
+	end
+	if self.db.profile.icon then
+		self:ScheduleRepeatingEvent("onyTargetCheck", self.onyTarget, 0.5, self)
+	end
 end
 
 function module:DeepBreath()
@@ -308,47 +366,5 @@ function module:DeepBreath()
 		self:Message(L["deepBreath_warn"], "Important", true, "RunAway")
 		self:Bar(L["deepBreath_bar"], timer.deepBreathCast, icon.deepbreath, true, "black")
 		self:WarningSign(icon.deepbreath_sign, 1)
-	end
-end
-
-function module:DelayedFireballCheck()
-	local name = "Unknown"
-	self:CheckTarget()
-	if fireballTarget then
-		name = fireballTarget
-		self:Icon(name, iconNumber)
-		iconNumber = iconNumber - 1
-		if iconNumber < 7 then
-			iconNumber = 8
-		end
-		if name == UnitName("player") then
-			self:WarningSign(icon.fireball, 0.7)
-		end
-	end
-	if self.db.profile.fireball then
-		self:Bar(string.format(L["fireballCast_bar"], name), 3 - 0.1, icon.fireball, true, "red")
-	end
-end
-
-function module:Fireball()
-	self:ScheduleEvent("OnyxiaDelayedFireballCheck", self.DelayedFireballCheck, 0.1, self)
-end
-
-function module:CheckTarget()
-	local i
-	local newtarget = nil
-	local enemy = self:ToString()
-	if UnitName("playertarget") == enemy then
-		newtarget = UnitName("playertargettarget")
-	else
-		for i = 1, GetNumRaidMembers(), 1 do
-			if UnitName("Raid"..i.."target") == enemy then
-				newtarget = UnitName("Raid"..i.."targettarget")
-				break
-			end
-		end
-	end
-	if newtarget then
-		fireballTarget = newtarget
 	end
 end

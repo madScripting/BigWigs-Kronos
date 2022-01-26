@@ -1,7 +1,7 @@
 
 local module, L = BigWigs:ModuleDeclaration("Lucifron", "Molten Core")
 
-module.revision = 20041
+module.revision = 20057
 module.enabletrigger = module.translatedName
 
 module.toggleoptions = {"bigicon", "sounds", "adds", "curse", "doom", "icon", "shock", "mc", "bosskill"}
@@ -141,6 +141,9 @@ function module:OnEngage()
 		self:Bar(L["doom_bar"], timer.firstDoom, icon.doom)
 	end
 	self:Sync("LucifronShock")
+	if UnitName("target") == "Lucifron" and (IsRaidLeader() or IsRaidOfficer()) then
+		klhtm.net.sendmessage("target " .. "Lucifron")
+	end
 end
 
 function module:OnDisengage()

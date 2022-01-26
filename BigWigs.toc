@@ -1,13 +1,13 @@
 ## Interface: 11200
 
-## Title: |cFFFF8080Relar|r Big Wigs |cff7fff7f20052|r
+## Title: |cFFFF8080Relar|r Big Wigs |cff7fff7f30001|r
 ## Title-zhCN: |cff7fff7fKronos|r Big Wigs
 ## Notes: Boss Mods with Timer bars.
 ## Notes-zhCN: 团队首领战信息提示插件，带有计时条。
 ## Notes-zhTW: 團隊首領戰訊息提示插件，帶有計時條。
 ## Author: Relar, Bethy & Others
 ## Version: 3.0.0
-## X-Website: https://www.twitch.tv/magnifiquetwitch
+## X-Website: https://github.com/madScripting
 ## X-Category: Raid
 ## X-RelSite-WoWI: 5086
 ## X-RelSite-Curse: 4356
@@ -54,12 +54,16 @@ Core.lua
 Options.lua
 
 Plugins\Bars.lua
+Plugins\Battlegrounds.lua
 Plugins\BossBlock.lua
 Plugins\BossRecords.lua
+Plugins\CcMonitor.lua
 Plugins\Colors.lua
 Plugins\Comm.lua
 Plugins\CommonAuras.lua
 Plugins\CustomBar.lua
+Plugins\FrostBlast.lua
+Plugins\Ignite.lua
 Plugins\KtmOptions.lua
 Plugins\Messages.lua
 Plugins\Proximity.lua
@@ -74,8 +78,7 @@ Plugins\Test.lua
 Plugins\Tranq.lua
 Plugins\Version.lua
 Plugins\WarningSign.lua
-Plugins\FrostBlast.lua
-Plugins\Ignite.lua
+Plugins\WorldBuffs.lua
 
 Raids\ZG\Arlokk.lua
 Raids\ZG\Jeklik.lua
@@ -142,9 +145,14 @@ Raids\Other\Emeriss.lua
 Raids\Other\Lethon.lua
 Raids\Other\Taerar.lua
 Raids\Other\Ysondre.lua
-Raids\Other\Gordok.lua
+
 
 Raids\Onyxia\Onyxia.lua
+
+Raids\UBRS\Drakkisath.lua
+
+Raids\DireMaul\CaptainKromcrush.lua
+Raids\DireMaul\Gordok.lua
 
 Raids\Naxxramas\Anubrekhan.lua
 Raids\Naxxramas\Gluth.lua

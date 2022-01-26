@@ -1,17 +1,7 @@
---Warlocks should use these macros to banish targets
---For Rank 1:
---/script if GetRaidTargetIndex("target") == nil then icon=UnitName("target") else icon=GetRaidTargetIndex("target") end
---/script SendChatMessage(UnitName("player").." Banishing R1 "..icon)
---/cast Banish(Rank 1)
---
---For Rank 2(max rank):
---/script if GetRaidTargetIndex("target") == nil then icon=UnitName("target") else icon=GetRaidTargetIndex("target") end
---/script SendChatMessage(UnitName("player").." Banishing R2 "..icon)
---/cast Banish(Rank 2)
 
 local module, L = BigWigs:ModuleDeclaration("Garr", "Molten Core")
 
-module.revision = 20041
+module.revision = 20057
 module.enabletrigger = module.translatedName
 module.toggleoptions = {"adds", "bosskill"}
 
@@ -45,18 +35,12 @@ L:RegisterTranslations("enUS", function() return {
 	addmsg6 = "6/8 Firesworns dead!",
 	addmsg7 = "7/8 Firesworns dead!",
 	addmsg8 = "8/8 Firesworns dead!",
-	
-	banish_trigger = "(.*) Banishing (.*) (.*)",
-	banish_bar = " Ban ",
 } end)
 
 local timer = {
-	banishR2 = 31.5,
-	banishR1 = 21.5,
 }
 
 local icon = {
-	banish = "spell_shadow_cripple",
 }
 
 local syncName = {
@@ -67,7 +51,6 @@ local adds = 0
 module.wipemobs = { L["firesworn_name"] }
 
 function module:OnEnable()
-	self:RegisterEvent("CHAT_MSG_SAY", "Event")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS", "Event")
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_CREATURE_DAMAGE", "Event")
 end
@@ -78,33 +61,15 @@ function module:OnSetup()
 end
 
 function module:OnEngage()
+	if UnitName("target") == "Garr" and (IsRaidLeader() or IsRaidOfficer()) then
+		klhtm.net.sendmessage("target " .. "Garr")
+	end
 end
 
 function module:OnDisengage()
 end
 
 function module:Event(msg)
-	local _,_, name, rank, idobanish, mcverb = string.find(msg, L["banish_trigger"])
-	if idobanish then
-		a=tonumber(idobanish)
-		if tonumber(idobanish) == nil then return end
-		if tonumber(idobanish) >= 0 then
-			if a == 1 then bantarget = "Star" end
-			if a == 2 then bantarget = "Circle" end
-			if a == 3 then bantarget = "Diamond" end
-			if a == 4 then bantarget = "Triangle" end
-			if a == 5 then bantarget = "Moon" end
-			if a == 6 then bantarget = "Square" end
-			if a == 7 then bantarget = "X" end
-			if a == 8 then bantarget = "Skull" end
-			if tostring(rank) == "R1" then
-				self:Bar(string.format(name .. L["banish_bar"] .. bantarget), timer.banishR1, icon.banish)
-			end
-			if tostring(rank) == "R2" then
-				self:Bar(string.format(name .. L["banish_bar"] .. bantarget), timer.banishR2, icon.banish)
-			end
-		end
-	end
 	if (string.find(msg, L["triggeradddead8"])) then
 		self:Sync("GarrAddDead8")
 	elseif (string.find(msg, L["triggeradddead7"])) then

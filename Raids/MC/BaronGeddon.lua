@@ -1,7 +1,7 @@
 
 local module, L = BigWigs:ModuleDeclaration("Baron Geddon", "Molten Core")
 
-module.revision = 20046
+module.revision = 20054
 module.enabletrigger = module.translatedName
 module.wipemobs = nil
 module.toggleoptions = {"sounds", "bigicon", "inferno", "service", "bomb", "mana", "announce", "icon", "bosskill"}
@@ -81,10 +81,10 @@ local timer = {
 	bomb = 8,
 	inferno = 8,
 	firstBomb = 19.1,
-	nextBomb = 11.5,
-	firstInferno = 21.5, --was 24.5
-	nextInferno = 24,
-	firstIgnite = 28,
+	nextBomb = 7,
+	firstInferno = 21.5,
+	nextInferno = 17,
+	firstIgnite = 20.8,
 	nextIgnite = 33,
 	service = 8,
 }

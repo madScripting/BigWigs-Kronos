@@ -1,7 +1,7 @@
 
 local module, L = BigWigs:ModuleDeclaration("King Gordok", "Dire Maul")
 
-module.revision = 20046
+module.revision = 20059
 module.enabletrigger = module.translatedName
 module.toggleoptions = {"stomp", "ms", "charge", "bosskill"}
 
@@ -31,11 +31,11 @@ L:RegisterTranslations("enUS", function() return {
 } end )
 
 local timer = {
-	firstWarStomp = {13, 24},
-	warStomp = {17, 26},
+	firstWarStomp = 12.7,
+	warStomp = 17,
 
-	firstMortalStrike = {24, 30},
-	mortalStrike = {17, 26},
+	firstMortalStrike = 10.5,
+	mortalStrike = 6.5,
 
 	firstCharge = 5,
 	charge = 20,
@@ -72,13 +72,16 @@ function module:OnEngage()
 	lastCharge = startTime - timer.charge + timer.firstCharge
 	self:ScheduleRepeatingEvent("gordok_checktimeout", self.CheckTimeout, 0.5, self)
 	if self.db.profile.stomp then
-		self:IntervalBar(L["warstomp_bar"], timer.firstWarStomp[1], timer.firstWarStomp[2], icon.warStomp, true, "yellow")
+		self:Bar(L["warstomp_bar"], timer.firstWarStomp, icon.warStomp, true, "yellow")
 	end
 	if self.db.profile.ms then
-		self:IntervalBar(L["ms_bar"], timer.firstMortalStrike[1], timer.firstMortalStrike[2], icon.mortalStrike, true, "blue")
+		self:Bar(L["ms_bar"], timer.firstMortalStrike, icon.mortalStrike, true, "blue")
 	end
 	if self.db.profile.charge then
 		self:Bar(L["charge_bar"], timer.firstCharge, icon.charge, true, "red")
+	end
+	if UnitName("target") == "King Gordok" and (IsRaidLeader() or IsRaidOfficer()) then
+		klhtm.net.sendmessage("target " .. "King Gordok")
 	end
 end
 
@@ -116,11 +119,11 @@ function module:CheckTimeout()
 end
 
 function module:Warstomp()
-	self:IntervalBar(L["warstomp_bar"], timer.warStomp[1], timer.warStomp[2], icon.warStomp, true, "yellow")
+	self:Bar(L["warstomp_bar"], timer.warStomp, icon.warStomp, true, "yellow")
 end
 
 function module:MortalStrike()
-	self:IntervalBar(L["ms_bar"], timer.mortalStrike[1], timer.mortalStrike[2], icon.mortalStrike, true, "blue")
+	self:Bar(L["ms_bar"], timer.mortalStrike, icon.mortalStrike, true, "blue")
 end
 
 function module:Charge()

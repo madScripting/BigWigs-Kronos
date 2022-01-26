@@ -1,7 +1,7 @@
 
 local module, L = BigWigs:ModuleDeclaration("Sulfuron Harbinger", "Molten Core")
 
-module.revision = 20041
+module.revision = 20057
 module.enabletrigger = module.translatedName
 module.toggleoptions = {"heal", "adds", "knockback", "bosskill"}
 
@@ -90,6 +90,9 @@ function module:OnEngage()
 	if self.db.profile.knockback then
 		self:Bar(L["knockbacktimer"], timer.firstKnockback, icon.knockback)
 		self:DelayedMessage(timer.firstKnockback - 3, L["knockbackannounce"], "Urgent")
+	end
+	if UnitName("target") == "Sulfuron" and (IsRaidLeader() or IsRaidOfficer()) then
+		klhtm.net.sendmessage("target " .. "Sulfuron")
 	end
 end
 
