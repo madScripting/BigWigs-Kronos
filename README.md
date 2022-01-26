@@ -20,12 +20,12 @@ Special thanks to <b>Masil</b> for Kronos adjustments.
 Latest adjustments for Kronos 3 and 4 made by <a href="https://github.com/madScripting"><b>Relar</b></a><br>
 
 ## Revisions
-30001	Final K4 Pre-BWL release
-20061
-	Drakkisath			Overhaul of the adds counter and conflag timer after broad testing
-	WorldBuffs			Changed delivery method, from BigWigs_sync to SendAddonMessage for maximum "contamination"
-	LoadOnDemand		Added Orgrimmar and STV in the auto-enable bigwigs for maximum worldbuffs "contamination"
-20060
+30001	Final K4 Pre-BWL release<br>
+20061<br>
+	Drakkisath			Overhaul of the adds counter and conflag timer after broad testing<br>
+	WorldBuffs			Changed delivery method, from BigWigs_sync to SendAddonMessage for maximum "contamination"<br>
+	LoadOnDemand		Added Orgrimmar and STV in the auto-enable bigwigs for maximum worldbuffs "contamination"<br>
+20060<br>
 	MC - Golemagg		Fixed the EAT EAT to happen only once
 	WorldBuffs			Attempt to fix sync
 20059
