@@ -21,13 +21,16 @@ Latest adjustments for Kronos 3 and 4 made by <a href="https://github.com/madScr
 
 ## Revisions
 <b>30001</b>	Final K4 Pre-BWL release<br>
-20061</b><br>
+
+<b>20061</b><br>
 	Drakkisath			Overhaul of the adds counter and conflag timer after broad testing<br>
 	WorldBuffs			Changed delivery method, from BigWigs_sync to SendAddonMessage for maximum "contamination"<br>
 	LoadOnDemand		Added Orgrimmar and STV in the auto-enable bigwigs for maximum worldbuffs "contamination"<br>
+
 <b>20060</b><br>
 	MC - Golemagg		Fixed the EAT EAT to happen only once<br>
 	WorldBuffs			Attempt to fix sync<br>
+
 <b>20059</b><br>
 	Battlegrounds		Fixed WSG FC bars<br>
 						Added resurrection bars for WSG and all AB points<br>
@@ -48,8 +51,11 @@ Latest adjustments for Kronos 3 and 4 made by <a href="https://github.com/madScr
 	MC - Golemagg		Added a warning to eat when he dies<br>
 	MC - Multiple		Made KTM auto-master target on all bosses with multiple adds<br>
 	Drakkisath			Added KTM auto-master target<br>
+
 <b>20058</b>	Testing version<br>
+
 <b>20057</b>	Testing version<br>
+
 <b>20056</b><br>
 	Battlegrounds		Added the new Battlegrounds module (unfinished)<br>
 	Ony					Added a /say when you are targetted by Ony<br>
@@ -57,6 +63,7 @@ Latest adjustments for Kronos 3 and 4 made by <a href="https://github.com/madScr
 						Fixed P2 knockAway timers<br>
 						Improved ony raid target marking to make it more consistent<br>
 	DM-N				Added Captain Kromcrush module (untested)<br>
+
 <b>20055</b><br>
 	Ony					Adjusted the KnockAway timer, overhaul of KnockAway functionality<br>
 						Added auto-master target for Onyxia<br>
@@ -69,20 +76,24 @@ Latest adjustments for Kronos 3 and 4 made by <a href="https://github.com/madScr
 	CcMonitor			Adjusted (+2sec) the timers to pad for syncs delay<br>
 						Tightened restrictions to fire the bars (UnitCreatureType) (untested)<br>
 	MC - Gheddon		Adjusted Mana Ignite timer<br>
+
 <b>20053</b><br>
 	CcMonitor			Added the new CcMonitor plugin<br>
+
 <b>20052</b>	(K4)<br>
 	MC - Ragnaros		Fixed sons death count<br>
 	MC - Gheddon		Adjusted Inferno timer for 2nd and up casts (-7seconds)<br>
 	MC - Shazzrah		Adjusted Deaden timer (static 8seconds)<br>
 	MC - Domo			Added melee dmg shield warning icon<br>
 						Attempt to adjust the adds death count (seems they don't show in combat log that they die half the time...)<br>
+
 <b>20051</b>	(K3 Final)<br>
 	Naxx - Sapphiron	Added many bars and warnings<br>
 	Naxx - Kel'Thuzad	Deleted the useless volley bar<br>
 						Fixed the kick warning<br>
 						Added clickable MC bars for all MCs<br>
 						Fixed Auto-MasterTarget<br>
+
 <b>20050</b><br>
 	ZG - Gahz'ranka		Changed bars colors<br>
 	Naxx - DkCaptain	Fixed the timers and prevented an error if the module would reset / not start on pull<br>
@@ -92,6 +103,7 @@ Latest adjustments for Kronos 3 and 4 made by <a href="https://github.com/madScr
 	Naxx - Gothik		Confirmed sideSwitch timer (gate open seems to be linked to hp @ timer end)<br>
 	Naxx				Deleted the Farclip Plugin as it was causing issue<br>
 						set higher default values on the Range plugin for the combat log<br>
+
 <b>20049</b><br>
 	Naxx - Thaddius		Fixed Magnetic Pull trigger<br>
 	Naxx - Horsemen		Changed the VoidZone icon to something more appropriate<br>
@@ -101,11 +113,13 @@ Latest adjustments for Kronos 3 and 4 made by <a href="https://github.com/madScr
 	Naxx - Gothik		Added side-switching and gate opening timers (now need the actual time for those timers, set at 45 seconds for now.)<br>
 	Naxx - DkCaptain	Added the new DkCaptain module<br>
 						Now announces whirlwinds<br>
+
 <b>20048</b><br>
 	Naxx				Overhaul of all Naxxramas modules<br>
 						Adjusted all timers, icons, colors<br>
 						Added tons of timers, triggers, warnings<br>
 	Naxx - SewageSlime	Added the new SewageSlimes module<br>
+
 <b>20047</b><br>
 	Onyxya				Adjusted Timers<br>
 	AQ40 - Ouro			Removed the KTM self threat reset; now handled by KTM<br>
@@ -115,6 +129,7 @@ Latest adjustments for Kronos 3 and 4 made by <a href="https://github.com/madScr
 	AQ20 - Guardians	Added reflection warnings<br>
 	Ignite				Probably fixed an rare error with the module; undefined igniteStack var, now predefined as default to 1<br>
 	Versions			Changed location for latest BigWigs to Twitch page.<br>
+
 <b>20046</b><br>
 	DM-N - King Gordok	New timers for King Gordok in DM-N<br>
 	Ignite				Added new Ignite module<br>
@@ -123,11 +138,13 @@ Latest adjustments for Kronos 3 and 4 made by <a href="https://github.com/madScr
 	MC - Gheddon		Added delays to Geddon timers, disabled overlaps, adjusted firstInferno timer<br>
 	Onyxia				Overhaul of Onyxia module<br>
 	AQ40 - Champion		Added detection for self-immune to fear<br>
+
 <b>20045</b><br>
 	AQ40 - C'Thun		Tied DarkGlare timers to the first cast of GreenBeam, should be 100% accurate.<br>
 						Tied RandomBeam timer to the first cast of GreenBeam, should be 100% accurate.<br>
 						Tied DarkGlare refresh timers to the first GreenBeam after Glare, should be 100% accurate.<br>
 	AQ40 - Ouro			Fixed an oversight with the Berserk detection.<br>
+
 <b>20044</b><br>
 	AQ20 - Ossirian		Fixed "possible supreme" timer (added the 5seconds for crystal "loading" time)<br>
 	ZG - Gahz'ranka		Fixed an error with frost breath bar (wrong localization)<br>
@@ -136,6 +153,7 @@ Latest adjustments for Kronos 3 and 4 made by <a href="https://github.com/madScr
 	AQ40 - Warder		Changed bar colors and text.<br>
 	AQ40 - C'Thun		Tightened timers of Dark Glare, deleted a useless check for GNPP.<br>
 	AQ40 - Ouro			Fixed SandBlast threat reset when the spin is resisted. Requires KTM 69.06 or above<br>
+
 <b>20043</b><br>
 	BWL - Nefarian		Added FearSoon bar. Changed bar colors.<br>
 	AQ40 - Ouro			Added sounds and bigIcons. Changed bar colors and icons.<br>
@@ -152,10 +170,12 @@ Latest adjustments for Kronos 3 and 4 made by <a href="https://github.com/madScr
 	AQ20 - Ossirian		Added timer for first crystal<br>
 	BWL - Ebonroc		Added masterTarget on engage, should fix threat<br>
 	BWL - Razorgore		Reenabled the castbar now that the counter and P2trigger works.<br>
+
 <b>20042</b><br>
 	AQ20 - Kurinnaxx	Added a toggle for the sand trap bars<br>
 	ZG					Overhaul of all ZG bosses.<br>
 	BWL - Chromaggus	Fixed an error on Chromaggus Time Lapse.<br>
+
 <b>20041</b><br>
 	BigWigs - Raids		Added A LOT of togglable options<br>
 	WarningSign			Shortened the bigIcons timers by default (by popular demand)<br>
@@ -164,6 +184,7 @@ Latest adjustments for Kronos 3 and 4 made by <a href="https://github.com/madScr
 	AQ20 - Kurinnaxx	Fixed enrage warning error<br>
 	ZG - Hakkar			Now warns priests to dispell after MC.<br>
 	BWL - Nefarian		Fixed an error preventing P2 timers from happenning (woops!)<br>
+
 <b>20036</b><br>
 	AQ40 - C'Thun		Edited timers, Added GNPP warning, Added run in, Changed timer colors, Added Window of Opprtunity<br>
 	AQ40 - Ouro			Master target and KTM reset<br>
@@ -177,6 +198,7 @@ Latest adjustments for Kronos 3 and 4 made by <a href="https://github.com/madScr
 	AQ20 - Moam			Added mana bar<br>
 	AQ20 - Guardians	Added 1-2groups warning, revamped explode warning<br>
 	ZG - TigerBoss		Added Kill/Don't kill warnings<br>
+
 <b>20035</b><br>
 	BigWigs - Raids		Added many warningIcons and Sounds to many encounters<br>
 	MC - Lucifron		Enhanced Lucifron MC<br>
@@ -201,6 +223,7 @@ Latest adjustments for Kronos 3 and 4 made by <a href="https://github.com/madScr
 	AQ40 - Defenders	Enhanced Defenders, fixed infinite messages, added sounds on explosion and plague<br>
 	AQ40 - Champion		Added the new Champion module for fears<br>
 	AQ40 - Mindslayer	Added the new Mindslayer module for MC and fear<br>
+
 <b>20034</b><br>
 	AQ40 - Sartura		Edited Knockback! text and timer (from 10sec to 8sec Cooldown based)<br>
 	AQ40 - Viscidus		Cleaned a lot unneeded announces.<br>
@@ -213,13 +236,16 @@ Latest adjustments for Kronos 3 and 4 made by <a href="https://github.com/madScr
 	AQ40 - Defenders	Fixed Plague icon<br>
 	AQ40 - Sentinels	Added the new Sentinel module<br>
 	AQ40 - Versions.lua	Changed github link on outdated version for Discord #addons<br>
+
 <b>20033</b><br>
 	BWL - Razorgore		Fixed Razorgore so it doesn't reset mid fight.(will have to force reset with ctrl-click on wipe)<br>
 	BWL - CommonAuras	Went back to old version of CommonAuras, should fix random error on zeppelin crash<br>
+
 <b>20032</b><br>
 	MC - Gehennas		Fixed Gehennas for real, BethyServer tested<br>
 	MC - Geddon			Fixed Baron Geddon inferno trigger, BethyServer tested. Need to confirm the trigger on Kronos.<br>
 	MC - Shazzrah		Fixed Shazzrah CS, Curse, BethyServer tested. Need to confirm triggers on Kronos<br>
+
 <b>20031</b><br>
 	MC - Gehennas		Fixed Gehennas	One "earliestCurse" was remaining, replaced with nextCurse.<br>
 						Confirmed no occurence of "earliestCurse" or "latestCurse" remain.<br>
@@ -228,6 +254,7 @@ Latest adjustments for Kronos 3 and 4 made by <a href="https://github.com/madScr
 						Fixed a typo in the bomb section, let's see how that goes...<br>
 						Shortened LivingBomb CD as per data.<br>
 						Adjusted nextIgnite CD as per data.<br>
+
 <b>20030</b><br>
 	Relar BigWigs		Release of Relar version.<br>
 						Adjusted all timers that seemed off.<br>
