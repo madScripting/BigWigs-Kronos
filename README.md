@@ -6,12 +6,12 @@ This Modification is built for Patch 1.12.1 and its content for use on the <b>Kr
 Either clone the repository to your WoW/Interface/Addons folder, or download manually via github (click on Clone or Download -> Download ZIP. Do not forget to rename the directory to "BigWigs" afterwards.
 
 ## New modules
-If you already had a previous version of BigWigs, some new modules may not be enabled by default.
-Here is  an example of how to enable them:
-RightClick BigWigs on your minimap -> Bosses -> Outdoor Raid Bosses -> General Drakkisath -> Check everything.
-RightClick BigWigs on your minimap -> Bosses -> Outdoor Raid Bosses -> Captain Kromcrush -> Check everything.
-RightClick BigWigs on your minimap -> Extras -> Battlegrounds -> Check everything.
-RightClick BigWigs on your minimap -> Extras -> CcMonitor -> Check everything.
+If you already had a previous version of BigWigs, some new modules may not be enabled by default.<br>
+Here is  an example of how to enable them:<br>
+RightClick BigWigs on your minimap -> Bosses -> Outdoor Raid Bosses -> General Drakkisath -> Check everything.<br>
+RightClick BigWigs on your minimap -> Bosses -> Outdoor Raid Bosses -> Captain Kromcrush -> Check everything.<br>
+RightClick BigWigs on your minimap -> Extras -> Battlegrounds -> Check everything.<br>
+RightClick BigWigs on your minimap -> Extras -> CcMonitor -> Check everything.<br>
 RightClick BigWigs on your minimap -> Extras -> WorldBuffs -> Check everything.
 
 ## Contributing
