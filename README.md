@@ -5,6 +5,15 @@ This Modification is built for Patch 1.12.1 and its content for use on the <b>Kr
 ## How to install
 Either clone the repository to your WoW/Interface/Addons folder, or download manually via github (click on Clone or Download -> Download ZIP. Do not forget to rename the directory to "BigWigs" afterwards.
 
+## New modules
+If you already had a previous version of BigWigs, some new modules may not be enabled by default.
+Here is  an example of how to enable them:
+RightClick BigWigs on your minimap -> Bosses -> Outdoor Raid Bosses -> General Drakkisath -> Check everything.
+RightClick BigWigs on your minimap -> Bosses -> Outdoor Raid Bosses -> Captain Kromcrush -> Check everything.
+RightClick BigWigs on your minimap -> Extras -> Battlegrounds -> Check everything.
+RightClick BigWigs on your minimap -> Extras -> CcMonitor -> Check everything.
+RightClick BigWigs on your minimap -> Extras -> WorldBuffs -> Check everything.
+
 ## Contributing
 If you would like to contribute, just open a pull request.
 
@@ -21,7 +30,8 @@ Latest adjustments for Kronos 3 and 4 made by <a href="https://github.com/madScr
 
 ## Revisions
 <b>30001</b>	Final K4 Pre-BWL release<br>
-
+	Readme---				Edited for readability on GitHub<br>
+	
 <b>20061</b><br>
 	Drakkisath---			Overhaul of the adds counter and conflag timer after broad testing<br>
 	WorldBuffs---			Changed delivery method, from BigWigs_sync to SendAddonMessage for maximum "contamination"<br>
