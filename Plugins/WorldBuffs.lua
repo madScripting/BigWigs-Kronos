@@ -1,17 +1,13 @@
 
 BigWigsWorldBuffs = BigWigs:NewModule("WorldBuffs")
-BigWigsWorldBuffs.revision = 20061
+BigWigsWorldBuffs.revision = 20057
 BigWigsWorldBuffs.external = true
 BigWigsWorldBuffs.consoleCmd = "WorldBuffs"
 
 --[[ToDo
-confirm nef trigger
-confirm zg trigger
+confirm the yell and say is being registered (Monster == NPC too?)
+check if the sync goes thru guild
 confirm timers
-]]--
-
---[[for testing
-/script SendAddonMessage("BigWigs","onyBuff", "RAID", "Relar");
 ]]--
 
 local L = AceLibrary("AceLocale-2.2"):new("BigWigsWorldBuffs")
@@ -22,25 +18,21 @@ L:RegisterTranslations("enUS", function() return {
 	["Toggle WorldBuffs bars on or off."] = true,
 	["Bars"] = true,
 
-	onyBuffTrigger = "Onyxia",
+	onyBuffTrigger = "Onyxia, has been slain",
 	onyBuffNpc = "Overlord Runthak",
 	onyBuffBar = "Ony Buff",
-	onyBuffAddonMsg = "onyBuff",
 	
-	rendBuffTrigger = "Rend Blackhand", --is a say
+	rendBuffTrigger = "Rend Blackhand, has fallen", --is a say
 	rendBuffNpc = "Thrall",
 	rendBuffBar = "Rend Buff",
-	rendBuffAddonMsg = "rendBuff",
 	
 	nefBuffTrigger = "NEFARIAN IS SLAIN",
 	nefBuffNpc = "High Overlord Saurfang",
 	nefBuffBar = "Nef Buff",
-	nefBuffAddonMsg = "nefBuff",
 	
 	zgBuffTrigger = "Begin the ritual",
 	zgBuffNpc = "Molthor",
 	zgBuffBar = "ZG Buff",
-	zgBuffAddonMsg = "zgBuff",
 } end)
 
 BigWigsWorldBuffs.defaults = {
@@ -85,16 +77,17 @@ local color = {
 	zgBuffColor = "Green",
 }
 
-local onyBuffTime = 0
-local rendBuffTime = 0
-local nefBuffTime = 0
-local zgBuffTime = 0
+local syncName = {
+	onyBuff = "WBonyBuff"..BigWigsWorldBuffs.revision,
+	rendBuff = "WBrendBuff"..BigWigsWorldBuffs.revision,
+	nefBuff = "WBnefBuff"..BigWigsWorldBuffs.revision,
+	zgBuff = "WBzgBuff"..BigWigsWorldBuffs.revision,
+}
 
 function BigWigsWorldBuffs:OnEnable()
 	self:RegisterEvent("CHAT_MSG_MONSTER_YELL", "Event")
 	self:RegisterEvent("CHAT_MSG_MONSTER_SAY", "Event")
 	self:RegisterEvent("CHAT_MSG_RAID_BOSS_EMOTE", "Event")
-	self:RegisterEvent("CHAT_MSG_ADDON", "AddonMsg")
 end
 
 function BigWigsWorldBuffs:OnSetup()
@@ -102,79 +95,58 @@ function BigWigsWorldBuffs:OnSetup()
 end
 
 function BigWigsWorldBuffs:Event(msg)
+	if "Orgrimmar" == GetZoneText() then
+		DEFAULT_CHAT_FRAME:AddMessage("msg: "..msg)
+	end
 	if string.find(msg, L["onyBuffTrigger"]) then
-		SendAddonMessage("BigWigs"," onyBuff", "PARTY")
-		SendAddonMessage("BigWigs"," onyBuff", "RAID")
-		SendAddonMessage("BigWigs"," onyBuff", "GUILD")
-		SendAddonMessage("BigWigs"," onyBuff", "BATTLEGROUND")
+		if UnitName("player") == "Relar" then
+			DEFAULT_CHAT_FRAME:AddMessage("onyBuffTrigger found")
+		end
+		self:Sync(syncName.onyBuff)
 	end
 	if string.find(msg, L["rendBuffTrigger"]) then
-		SendAddonMessage("BigWigs"," rendBuff", "PARTY")
-		SendAddonMessage("BigWigs"," rendBuff", "RAID")
-		SendAddonMessage("BigWigs"," rendBuff", "GUILD")
-		SendAddonMessage("BigWigs"," rendBuff", "BATTLEGROUND")
+		if UnitName("player") == "Relar" then
+			DEFAULT_CHAT_FRAME:AddMessage("rendBuffTrigger found")
+		end
+		self:Sync(syncName.rendBuff)
 	end
 	if string.find(msg, L["nefBuffTrigger"]) then
-		if UnitName("player") == "Relar" or UnitName("player") == "Zbanka" then
+		if UnitName("player") == "Relar" then
 			DEFAULT_CHAT_FRAME:AddMessage("nefBuffTrigger found")
 		end
-		SendAddonMessage("BigWigs"," nefBuff", "PARTY")
-		SendAddonMessage("BigWigs"," nefBuff", "RAID")
-		SendAddonMessage("BigWigs"," nefBuff", "GUILD")
-		SendAddonMessage("BigWigs"," nefBuff", "BATTLEGROUND")
+		self:Sync(syncName.nefBuff)
 	end
 	if string.find(msg, L["zgBuffTrigger"]) then
-		if UnitName("player") == "Relar" or UnitName("player") == "Zbanka" then
+		if UnitName("player") == "Relar" then
 			DEFAULT_CHAT_FRAME:AddMessage("zgBuffTrigger found")
 		end
-		SendAddonMessage("BigWigs"," zgBuff", "PARTY")
-		SendAddonMessage("BigWigs"," zgBuff", "RAID")
-		SendAddonMessage("BigWigs"," zgBuff", "GUILD")
-		SendAddonMessage("BigWigs"," zgBuff", "BATTLEGROUND")
+		self:Sync(syncName.zgBuff)
 	end
 end
 
-function BigWigsWorldBuffs:AddonMsg(prefix,text,target,author)
-	if prefix == "BigWigs" then
-		if string.find(text, L["onyBuffAddonMsg"]) then
-			if GetTime() > onyBuffTime + 30 then
-				SendAddonMessage("BigWigs"," onyBuff", "PARTY")
-				SendAddonMessage("BigWigs"," onyBuff", "RAID")
-				SendAddonMessage("BigWigs"," onyBuff", "GUILD")
-				SendAddonMessage("BigWigs"," onyBuff", "BATTLEGROUND")
-				self:Bar(L["onyBuffBar"], timer.onyBuffTimer, icon.onyBuffIcon, true, color.onyBuffColor)
-				onyBuffTime = GetTime()
-			end
+function BigWigsWorldBuffs:BigWigs_RecvSync(sync, rest, nick)
+	if sync == syncName.onyBuff and self.db.profile.bars then
+		if UnitName("player") == "Relar" then
+			DEFAULT_CHAT_FRAME:AddMessage("onyBuff SYNC RECEIVED")
 		end
-		if string.find(text, L["rendBuffAddonMsg"]) then
-			if GetTime() > rendBuffTime + 30 then
-				SendAddonMessage("BigWigs"," rendBuff", "PARTY")
-				SendAddonMessage("BigWigs"," rendBuff", "RAID")
-				SendAddonMessage("BigWigs"," rendBuff", "GUILD")
-				SendAddonMessage("BigWigs"," rendBuff", "BATTLEGROUND")
-				self:Bar(L["rendBuffBar"], timer.rendBuffTimer, icon.rendBuffIcon, true, color.rendBuffColor)
-				rendBuffTime = GetTime()
-			end
+		self:Bar(L["onyBuffBar"], timer.onyBuffTimer, icon.onyBuffIcon, true, color.onyBuffColor)
+	end
+	if sync == syncName.rendBuff and self.db.profile.bars then
+		if UnitName("player") == "Relar" then
+			DEFAULT_CHAT_FRAME:AddMessage("rendBuff SYNC RECEIVED")
 		end
-		if string.find(text, L["nefBuffAddonMsg"]) then
-			if GetTime() > nefBuffTime + 30 then
-				SendAddonMessage("BigWigs"," nefBuff", "PARTY")
-				SendAddonMessage("BigWigs"," nefBuff", "RAID")
-				SendAddonMessage("BigWigs"," nefBuff", "GUILD")
-				SendAddonMessage("BigWigs"," nefBuff", "BATTLEGROUND")
-				self:Bar(L["nefBuffBar"], timer.nefBuffTimer, icon.nefBuffIcon, true, color.nefBuffColor)
-				nefBuffTime = GetTime()
-			end
+		self:Bar(L["rendBuffBar"], timer.rendBuffTimer, icon.rendBuffIcon, true, color.rendBuffColor)
+	end
+	if sync == syncName.nefBuff and self.db.profile.bars then
+		if UnitName("player") == "Relar" then
+			DEFAULT_CHAT_FRAME:AddMessage("nefBuff SYNC RECEIVED")
 		end
-		if string.find(text, L["zgBuffAddonMsg"]) then
-			if GetTime() > zgBuffTime + 30 then
-				SendAddonMessage("BigWigs"," zgBuff", "PARTY")
-				SendAddonMessage("BigWigs"," zgBuff", "RAID")
-				SendAddonMessage("BigWigs"," zgBuff", "GUILD")
-				SendAddonMessage("BigWigs"," zgBuff", "BATTLEGROUND")
-				self:Bar(L["zgBuffBar"], timer.zgBuffTimer, icon.zgBuffIcon, true, color.zgBuffColor)
-				zgBuffTime = GetTime()
-			end
+		self:Bar(L["nefBuffBar"], timer.nefBuffTimer, icon.nefBuffIcon, true, color.nefBuffColor)
+	end
+	if sync == syncName.zgBuff and self.db.profile.bars then
+		if UnitName("player") == "Relar" then
+			DEFAULT_CHAT_FRAME:AddMessage("zgBuff SYNC RECEIVED")
 		end
+		self:Bar(L["zgBuffBar"], timer.zgBuffTimer, icon.zgBuffIcon, true, color.zgBuffColor)
 	end
 end

@@ -1,7 +1,7 @@
 
 local module, L = BigWigs:ModuleDeclaration("King Gordok", "Dire Maul")
 
-module.revision = 20059
+module.revision = 20057
 module.enabletrigger = module.translatedName
 module.toggleoptions = {"stomp", "ms", "charge", "bosskill"}
 
@@ -31,11 +31,11 @@ L:RegisterTranslations("enUS", function() return {
 } end )
 
 local timer = {
-	firstWarStomp = 12.7,
-	warStomp = 17,
+	firstWarStomp = {13, 24},
+	warStomp = {17, 26},
 
-	firstMortalStrike = 10.5,
-	mortalStrike = 6.5,
+	firstMortalStrike = {24, 30},
+	mortalStrike = {17, 26},
 
 	firstCharge = 5,
 	charge = 20,
@@ -72,10 +72,10 @@ function module:OnEngage()
 	lastCharge = startTime - timer.charge + timer.firstCharge
 	self:ScheduleRepeatingEvent("gordok_checktimeout", self.CheckTimeout, 0.5, self)
 	if self.db.profile.stomp then
-		self:Bar(L["warstomp_bar"], timer.firstWarStomp, icon.warStomp, true, "yellow")
+		self:IntervalBar(L["warstomp_bar"], timer.firstWarStomp[1], timer.firstWarStomp[2], icon.warStomp, true, "yellow")
 	end
 	if self.db.profile.ms then
-		self:Bar(L["ms_bar"], timer.firstMortalStrike, icon.mortalStrike, true, "blue")
+		self:IntervalBar(L["ms_bar"], timer.firstMortalStrike[1], timer.firstMortalStrike[2], icon.mortalStrike, true, "blue")
 	end
 	if self.db.profile.charge then
 		self:Bar(L["charge_bar"], timer.firstCharge, icon.charge, true, "red")
@@ -119,11 +119,11 @@ function module:CheckTimeout()
 end
 
 function module:Warstomp()
-	self:Bar(L["warstomp_bar"], timer.warStomp, icon.warStomp, true, "yellow")
+	self:IntervalBar(L["warstomp_bar"], timer.warStomp[1], timer.warStomp[2], icon.warStomp, true, "yellow")
 end
 
 function module:MortalStrike()
-	self:Bar(L["ms_bar"], timer.mortalStrike, icon.mortalStrike, true, "blue")
+	self:IntervalBar(L["ms_bar"], timer.mortalStrike[1], timer.mortalStrike[2], icon.mortalStrike, true, "blue")
 end
 
 function module:Charge()

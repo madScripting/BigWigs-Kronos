@@ -1,7 +1,7 @@
 
 local module, L = BigWigs:ModuleDeclaration("Captain Kromcrush", "Dire Maul")
 
-module.revision = 20059
+module.revision = 20057
 module.enabletrigger = module.translatedName
 module.toggleoptions = {"retaliation", "adds", "fear", "bosskill"}
 module.zonename = {
@@ -25,8 +25,7 @@ L:RegisterTranslations("enUS", function() return {
 	fear_name = "Fear warnings",
 	fear_desc = "Fear timer bars",
 	
-	fearTrigger = "afflicted by Intimidating Shout",
-	fearTrigger2 = "Intimidating Shout fail",
+	fearTrigger = "Intimidating Shout",
 	fearMessage = "Feared",
 	fearBar = "Fear CD",
 	
@@ -40,12 +39,10 @@ L:RegisterTranslations("enUS", function() return {
 	retaliationHurtMessage = "I'm an idiot taking damage from Retaliation",
 	
 	addsTrigger = "Help me crush these punys",
-	addsUpMessage = "Adds are up!",
 } end)
 
 local timer = {
 	retaliation = 15,
-	fear = 11.4,
 }
 
 local icon = {
@@ -60,8 +57,6 @@ local syncName = {
 }
 
 local _, playerClass = UnitClass("player")
-
-local lastFear = 0
 
 function module:OnEnable()
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE", "Event")
@@ -96,45 +91,68 @@ function module:OnDisengage()
 end
 
 function module:Event(msg)
-	if string.find(msg, L["fearTrigger"]) or string.find(msg, L["fearTrigger2"]) then
+	if string.find(msg, L["fearTrigger"]) then
+		if UnitName("player") == "Relar" then
+			DEFAULT_CHAT_FRAME:AddMessage("fearTrigger")
+		end
 		self:Fear()
 	end
 	if string.find(msg, L["addsTrigger"]) then
+		if UnitName("player") == "Relar" then
+			DEFAULT_CHAT_FRAME:AddMessage("addsTrigger")
+		end
 		self:AddsUp()
 	end
 	if string.find(msg, L["retaliationUpTrigger"]) then
+		if UnitName("player") == "Relar" then
+			DEFAULT_CHAT_FRAME:AddMessage("retaliationUpTrigger")
+		end
 		self:RetaliationUp()
 	end
 	if string.find(msg, L["retaliationDownTrigger"]) then
+		if UnitName("player") == "Relar" then
+			DEFAULT_CHAT_FRAME:AddMessage("retaliationDownTrigger")
+		end
 		self:RetaliationDown()
 	end
 	if string.find(msg, L["retaliationHurtTrigger"]) then
+		if UnitName("player") == "Relar" then
+			DEFAULT_CHAT_FRAME:AddMessage("retaliationHurtTrigger")
+		end
 		self:RetaliationHurt()
 	end
 end
 
 function module:AddsUp()
+	if UnitName("player") == "Relar" then
+		DEFAULT_CHAT_FRAME:AddMessage("function AddsUp")
+	end
 	if playerClass == "PRIEST" or playerClass == "WARLOCK" then
 		self:WarningSign(icon.fear, 0.7)
+		self:Sound("Beware")
 	end
 	if playerClass == "MAGE" then
 		self:WarningSign(icon.sheep, 0.7)
+		self:Sound("Beware")
 	end
 	if playerClass == "HUNTER" then
 		self:WarningSign(icon.trap, 0.7)
+		self:Sound("Beware")
 	end
-	self:Message(L["addsUpMessage"], "Urgent", false, "Beware")
 end
 
 function module:Fear()
-	if GetTime() > lastFear + 2 then
-		lastFear = GetTime()
-		self:Message(L["fearMessage"], "Attention", false, "Long")
-		self:Bar(L["fearBar"], timer.fear, icon.fear, true, "white")
+	if UnitName("player") == "Relar" then
+		DEFAULT_CHAT_FRAME:AddMessage("function Fear")
 	end
+	self:Message(L["fearMessage"], "Important")
+	self:Bar(L["fearBar"], timer.fear, icon.fear, true, "white")
 end
 
 function module:RetaliationUp()
+	if UnitName("player") == "Relar" then
+		DEFAULT_CHAT_FRAME:AddMessage("function RetaliationUp")
+	end
 	if playerClass == "WARRIOR" or playerClass == "ROGUE" then
 		self:Message(L["retaliationUpMessage"], "Important", false, "Beware")
 		self:WarningSign(icon.retaliation, 15)
@@ -142,6 +160,9 @@ function module:RetaliationUp()
 end
 
 function module:RetaliationDown()
+	if UnitName("player") == "Relar" then
+		DEFAULT_CHAT_FRAME:AddMessage("function RetaliationDown")
+	end
 	if playerClass == "WARRIOR" or playerClass == "ROGUE" then
 		self:Message(L["retaliationDownMessage"], "Important", false, "gogogo")
 		self:RemoveWarningSign(icon.retaliation)
@@ -149,5 +170,8 @@ function module:RetaliationDown()
 end
 
 function module:RetaliationHurt()
+	if UnitName("player") == "Relar" then
+		DEFAULT_CHAT_FRAME:AddMessage("function RetaliationHurt")
+	end
 	self:SendSay(L["retaliationHurtMessage"])
 end

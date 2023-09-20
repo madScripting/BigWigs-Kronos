@@ -1,7 +1,7 @@
 
 local module, L = BigWigs:ModuleDeclaration("General Drakkisath", "Upper Blackrock Spire")
 
-module.revision = 30001
+module.revision = 20057
 module.enabletrigger = module.translatedName
 module.toggleoptions = {"adds", "bosskill", "bigicon", "icon", -1, "conflagSelf", "conflagProxy", "flamestrike"}
 module.zonename = {
@@ -10,12 +10,9 @@ module.zonename = {
 	AceLibrary("Babble-Zone-2.2")["Upper Blackrock Spire"],
 }
 
---[[Testing stuff
-/script SendAddonMessage("BigWigs","DrakkisathAddDead", "RAID", "Relar");
-/script SendAddonMessage("BigWigs","MagmadarPanic"..20041, "RAID", "Relar");
-/script SendAddonMessage("BigWigs","DrakkisathConflagged"..20059 .."_ Relar", "RAID", "Relar"); works with rest method
-/script SendAddonMessage("BigWigs","DrakkisathConflagged"..20059 .."_Relar", "RAID", "Relar"); works with substring method
---]]
+--module.defaultDB = {
+	--adds = false,
+--}
 
 L:RegisterTranslations("enUS", function() return {
 	cmd = "Drakkisath",
@@ -46,7 +43,8 @@ L:RegisterTranslations("enUS", function() return {
 
 	addName = "Chromatic Elite Guard",
 	addTrigger = "Chromatic Elite Guard dies",
-	addDead = "%d/2 Chromatic Elite Guard dead!",
+
+	addDead = "/2 Chromatic Elite Guard dead!",
 	bringDrak = "Release Drakkisath!",
 
 	conflagrationTrigger = "([^%s]+) ([^%s]+) afflicted by Conflagration",
@@ -72,13 +70,13 @@ local icon = {
 }
 
 local syncName = {
-	drakAddDead = "DrakkisathAddDead",
-	conflagged = "DrakkisathConflagged"..module.revision.."_",
+	drakAddDead = "DrakkisathAddDead"..module.revision,
+	conflagged = "DrakkisathConflagged"..module.revision,
 }
 
 local addsDead = 0
 
-module.wipemobs = { L["addName"] }
+--module.wipemobs = { L["addName"] }
 
 function module:OnEnable()
 	self:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE", "Event")
@@ -88,15 +86,16 @@ function module:OnEnable()
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_PARTY_DAMAGE", "Event")
 	self:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE", "Event")
 	self:RegisterEvent("CHAT_MSG_SPELL_AURA_GONE_SELF", "Event")
-	self:RegisterEvent("CHAT_MSG_SPELL_AURA_GONE_PARTY", "Event")
-	self:RegisterEvent("CHAT_MSG_SPELL_AURA_GONE_OTHER", "Event")
+
+	self:RegisterEvent("CHAT_MSG_COMBAT_HOSTILE_DEATH", "Event")
 	
-	self:ThrottleSync(0.5, syncName.drakAddDead)
+	self:ThrottleSync(1, syncName.drakAddDead)
+	self:ThrottleSync(5, syncName.conflagged)
 end
 
 function module:OnSetup()
-	self.started = nil
-	self:RegisterEvent("CHAT_MSG_COMBAT_HOSTILE_DEATH", "Event")
+	--self.started = nil
+	addsDead = 0
 end
 
 function module:OnEngage()
@@ -111,17 +110,29 @@ end
 
 function module:Event(msg)
 	if string.find(msg, L["conflagrationTrigger"]) then
-		local _,_,conflagPlayer,_ = string.find(msg, L["conflagrationTrigger"])
+		if UnitName("player") == "Relar" then
+			DEFAULT_CHAT_FRAME:AddMessage("conflagrationTrigger")
+		end
+		local _,_, conflagPlayer, ptype = string.find(msg, L["conflagrationTrigger"])
 		if conflagPlayer then
+			if UnitName("player") == "Relar" then
+				DEFAULT_CHAT_FRAME:AddMessage("conflagPlayer: "..conflagPlayer)
+			end
 			if conflagPlayer == L["conflagrationSelfTrigger"] then
+				if UnitName("player") == "Relar" then
+					DEFAULT_CHAT_FRAME:AddMessage("conflagPlayer IS conflagrationSelfTrigger")
+				end
 				self:Sync(syncName.conflagged .. UnitName("player"))
-				if self.db.profile.conflagSelf then
+				if self.db.profile.conflagSelf and 
 					self:SendSay(L["conflagSelfWarn"])
 				end
 				if self.db.profile.icon then
 					self:TriggerEvent("BigWigs_SetRaidIcon", UnitName("player"))
 				end	
 			elseif conflagPlayer ~= L["conflagrationSelfTrigger"] then
+				if UnitName("player") == "Relar" then
+					DEFAULT_CHAT_FRAME:AddMessage("conflagPlayer NOT conflagrationSelfTrigger")
+				end
 				self:Sync(syncName.conflagged .. conflagPlayer)
 				if self.db.profile.icon then
 					self:TriggerEvent("BigWigs_SetRaidIcon", conflagPlayer)
@@ -133,16 +144,20 @@ function module:Event(msg)
 	if string.find(msg, L["conflagrationEndTrigger"]) then
 		local _,_, conflagEndPlayer, ptype = string.find(msg, L["conflagrationEndTrigger"])
 		if conflagEndPlayer then
+			if UnitName("player") == "Relar" then
+				DEFAULT_CHAT_FRAME:AddMessage("conflagEndPlayer: "..conflagEndPlayer)
+			end	
 			if self.db.profile.icon then
 				self:TriggerEvent("BigWigs_RemoveRaidIcon")
 			end
 		end
 	end
-	
 	if string.find(msg, L["addTrigger"]) then
+		if UnitName("player") == "Relar" then
+			DEFAULT_CHAT_FRAME:AddMessage("addTrigger")
+		end
 		self:Sync(syncName.drakAddDead)
 	end
-	
 	if string.find(msg, L["conflagProxyTrigger"]) and self.db.profile.conflagSelf then
 		self:WarningSign(icon.conflagIcon, 0.5)
 	end
@@ -155,27 +170,54 @@ function module:Event(msg)
 end
 
 function module:BigWigs_RecvSync(sync, rest, nick)
-	if sync == "DrakkisathAddDead" then
-		self:DrakAddDead()
-	elseif string.find(sync, syncName.conflagged) then
-		conflagPerson = string.sub(sync,27)
-		self:Conflagged(conflagPerson)
-	end
+	--if self.started then
+		if sync == syncName.drakAddDead then
+			if UnitName("player") == "Relar" then
+				DEFAULT_CHAT_FRAME:AddMessage("sync drakAddDead")
+			end
+			self:DrakAddDead()
+		elseif sync == syncName.conflagged then
+			if UnitName("player") == "Relar" then
+				DEFAULT_CHAT_FRAME:AddMessage("sync conflagged")
+			end
+			if UnitName("player") == "Relar" then
+				DEFAULT_CHAT_FRAME:AddMessage("conflagRest: "..rest)
+			end
+			self:Conflagged(rest)
+		end
+	--end
 end
 
 function module:DrakAddDead()
+	if UnitName("player") == "Relar" then
+		DEFAULT_CHAT_FRAME:AddMessage("DrakAddDead function")
+	end
 	addsDead = addsDead + 1
+	if UnitName("player") == "Relar" then
+		DEFAULT_CHAT_FRAME:AddMessage("addsDead: "..addsDead)
+	end
 	if self.db.profile.adds then
-		self:Message(string.format(L["addDead"], addsDead), "Positive", false, "Alert")
-		if addsDead == 2 then
-			self:Message(L["bringDrak"], "Important", false, "Long")
+		self:Message(string.format(addsDead, L["addDead"]), "Positive")
+	end
+	if addsDead == 2 then
+		if UnitName("player") == "Relar" then
+			DEFAULT_CHAT_FRAME:AddMessage("addsDead = 2")
+		end
+		if self.db.profile.adds then
+			self:Message(L["bringDrak"], "Positive")
 		end
 	end
 end
 
-function module:Conflagged(conflagPerson)
+function module:Conflagged(rest)
+	if UnitName("player") == "Relar" then
+		DEFAULT_CHAT_FRAME:AddMessage("Conflagged(rest) function")
+	end
+	if UnitName("player") == "Relar" then
+		DEFAULT_CHAT_FRAME:AddMessage("Conflagged(rest), rest: "..rest)
+	end
 	if self.db.profile.conflagProxy then
-		self:Message(string.format(L["conflagMessage"])..conflagPerson.."!", "Attention")
-		self:Bar(L["conflagBar"]..conflagPerson, timer.conflagTimer, icon.conflagIcon, true, "Red")
+		self:Message(string.format(L["conflagMessage"]).." "..rest.."!", "Attention")
+		self:Bar(L["conflagBar"]..rest, timer.conflagTimer, icon.conflagIcon, true, "Red")
 	end
 end

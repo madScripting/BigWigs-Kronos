@@ -1,7 +1,7 @@
 
 local module, L = BigWigs:ModuleDeclaration("Golemagg the Incinerator", "Molten Core")
 
-module.revision = 20060
+module.revision = 20057
 module.enabletrigger = module.translatedName
 module.toggleoptions = {"bigicon", "sounds", "magma", "earthquake", "enraged", "bosskill"}
 
@@ -72,7 +72,6 @@ function module:OnEngage()
 	if UnitName("target") == "Golemagg" and (IsRaidLeader() or IsRaidOfficer()) then
 		klhtm.net.sendmessage("target " .. "Golemagg")
 	end
-	eat = 0
 end
 
 function module:OnDisengage()
@@ -90,11 +89,8 @@ function module:UNIT_HEALTH(arg1)
 			earthquakeon = nil
 		end
 		if math.ceil(100*health/maxHealth) <= 2 then
-			if eat == 0 then
-				self:Sound("eat")
-				self:Message("Eat Eat Eat Eat")
-				eat = 1
-			end
+			self:Sound("eat")
+			self:Message("Eat Eat Eat Eat")
 		end
 	end
 end
@@ -136,5 +132,5 @@ function module:Magma()
 end
 
 function module:Enraged()
-	self:Message(L["enragewarn"], "Attention", false, "Beware")
+	self:Message(L["enragewarn"], "Attention", true, "Beware")
 end

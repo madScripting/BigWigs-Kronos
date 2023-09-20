@@ -82,21 +82,6 @@ end
 
 function BigWigsLoD:ZONE_CHANGED_NEW_AREA()
 	if "Dire Maul" == GetRealZoneText() then
-		if not AceLibrary("AceEvent-2.0"):IsFullyInitialized() then
-			self:RegisterEvent("AceEvent_FullyInitialized", "ZONE_CHANGED_NEW_AREA")
-		end
-		BigWigs:ToggleActive(true)
-	end
-	if "Orgrimmar" == GetRealZoneText() then
-		if not AceLibrary("AceEvent-2.0"):IsFullyInitialized() then
-			self:RegisterEvent("AceEvent_FullyInitialized", "ZONE_CHANGED_NEW_AREA")
-		end
-		BigWigs:ToggleActive(true)
-	end
-	if "Stranglethorn Vale" == GetRealZoneText() then
-		if not AceLibrary("AceEvent-2.0"):IsFullyInitialized() then
-			self:RegisterEvent("AceEvent_FullyInitialized", "ZONE_CHANGED_NEW_AREA")
-		end
 		BigWigs:ToggleActive(true)
 	end
 	self:LoadZone( GetRealZoneText() )
